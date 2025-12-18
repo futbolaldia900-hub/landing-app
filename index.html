@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro VIP - Casino Agüero</title>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 2rem; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 90%; max-width: 400px; text-align: center; }
+        h1 { color: #38bdf8; margin-bottom: 1.5rem; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; background: #334155; color: white; box-sizing: border-box;}
+        button { width: 100%; padding: 12px; background: #22c55e; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 10px; }
+        button:hover { background: #16a34a; }
+        .disclaimer { font-size: 0.8rem; color: #94a3b8; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🏆 Acceso VIP</h1>
+        <form id="registroForm">
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="text" id="apellido" placeholder="Apellido" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="telefono" placeholder="WhatsApp (ej: 1122334455)" required>
+            <input type="hidden" id="external_id" value="">
+            <button type="submit">🎰 CREAR CUENTA GRATIS</button>
+        </form>
+        <p class="disclaimer">Mayores de 18 años. Juega responsablemente.</p>
+    </div>
+
+    <script>
+        // 1. Capturamos el ID que viene de la PWA (para rastreo)
+        const params = new URLSearchParams(window.location.search);
+        const externalId = params.get('external_id') || 'sin_id';
+        document.getElementById('external_id').value = externalId;
+
+        // 2. Al enviar el formulario...
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btn = document.querySelector('button');
+            btn.innerHTML = '⏳ Creando usuario...';
+            btn.disabled = true;
+
+            const datos = {
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apellido').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                external_id: externalId
+            };
+
+            // 3. ENVIAR A MAKE (¡Aquí va tu link de Webhook!)
+            // Reemplaza TU_LINK_DE_MAKE con el link real que te dio Make
+            fetch('https://hook.us2.make.com/a4ewn67q11iqcajvitbse583mcmttlgl', { 
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(datos)
+            })
+            .then(response => {
+                alert('¡Cuenta Creada! Te contactaremos por WhatsApp con tu clave.');
+                // Aquí puedes redirigir al usuario al WhatsApp de soporte o a una página de "Gracias"
+                window.location.href = 'https://wa.me/549XXXXXXXXXX'; 
+            })
+            .catch(error => {
+                alert('Hubo un error. Intenta de nuevo.');
+                btn.innerHTML = '🎰 CREAR CUENTA GRATIS';
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
