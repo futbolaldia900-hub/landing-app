@@ -40,7 +40,6 @@
         .header-btn:active { transform: scale(0.95); }
 
         /* --- POSICIÓN EN PC (Escritorio) --- */
-        /* Lo ponemos bien a la izquierda del botón "Ingresar" para que no se toquen */
         @media (min-width: 481px) {
             .header-btn {
                 top: 15px;
@@ -49,14 +48,13 @@
         }
 
         /* --- POSICIÓN EN CELULAR (Móvil) --- */
-        /* Ahora lo bajamos para que NO tape el logo */
         @media (max-width: 480px) {
             .header-btn {
-                top: 65px; /* Debajo de la barra del logo (que mide aprox 60px) */
+                top: 65px; /* Debajo de la barra del logo */
                 right: 10px; /* Pegado a la derecha */
                 padding: 8px 14px;
                 font-size: 11px;
-                background: rgba(0, 200, 83, 0.95); /* Un pelín transparente para ver el juego */
+                background: rgba(0, 200, 83, 0.95);
             }
         }
 
@@ -109,12 +107,12 @@
         }
         .credential-box:active { background: rgba(255,255,255,0.15); }
 
-        /* LINK "YA TENGO CUENTA" (MEJORADO) */
+        /* LINK "YA TENGO CUENTA" */
         .link-text { 
             display: inline-block; 
             margin-top: 25px; 
             color: #aaa; 
-            font-size: 14px; /* Más grande */
+            font-size: 14px; 
             font-weight: 600;
             cursor: pointer; 
             text-decoration: none; 
@@ -225,12 +223,10 @@
             const passGuardado = localStorage.getItem('miPass');
 
             if (usuarioGuardado && passGuardado) {
-                // Si ya tiene datos guardados, mostramos el panel de bienvenida
                 document.getElementById('wbUser').innerText = usuarioGuardado;
                 document.getElementById('wbPass').innerText = passGuardado;
                 document.getElementById('welcomeBackModal').classList.remove('hidden');
             } else {
-                // Si es nuevo, mostramos el registro
                 document.getElementById('registerModal').classList.remove('hidden');
             }
         };
@@ -239,7 +235,6 @@
         async function procesarRegistro(e) {
             e.preventDefault();
             const btn = document.querySelector('#registroForm button');
-            const textoOriginal = btn.innerText;
             btn.innerText = "⏳ CREANDO CUENTA...";
             btn.disabled = true;
 
@@ -248,15 +243,12 @@
                 password: document.getElementById('regPass').value
             };
 
-            // SIMULACIÓN DE CONEXIÓN AL VPS
-            // (Aquí pondremos el fetch real cuando llegue la IP)
+            // SIMULACIÓN DE CONEXIÓN
             await new Promise(r => setTimeout(r, 1500)); 
 
-            // Guardar en el celular del cliente
             localStorage.setItem('miUsuario', datos.username);
             localStorage.setItem('miPass', datos.password);
 
-            // Actualizar vista
             document.getElementById('wbUser').innerText = datos.username;
             document.getElementById('wbPass').innerText = datos.password;
 
@@ -264,11 +256,10 @@
             document.getElementById('welcomeBackModal').classList.remove('hidden');
         }
 
-        // --- 3. FUNCIONES DE COPIADO ---
+        // --- 3. UTILIDADES ---
         function copiarDato(id) {
             const texto = document.getElementById(id).innerText;
             navigator.clipboard.writeText(texto);
-            // Efecto visual de copiado
             const box = document.getElementById(id).parentElement;
             box.style.background = "rgba(0, 200, 83, 0.3)";
             setTimeout(() => { box.style.background = "rgba(255,255,255,0.08)"; }, 200);
@@ -286,9 +277,50 @@
             document.getElementById('registerModal').classList.add('hidden');
             document.getElementById('welcomeBackModal').classList.add('hidden');
         }
-
         function abrirCajero() { document.getElementById('cajeroModal').classList.remove('hidden'); }
         function cerrarCajero() { document.getElementById('cajeroModal').classList.add('hidden'); }
     </script>
+
+    <script>
+        // 1. Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registrado', reg))
+                    .catch(err => console.log('SW error', err));
+            });
+        }
+
+        // 2. Mostrar cartel de "Instalar" si no es App todavía
+        if (!window.matchMedia('(display-mode: standalone)').matches) {
+            // Esperamos 2 segundos para no tapar el login
+            setTimeout(() => {
+                const hint = document.createElement('div');
+                hint.style.cssText = `
+                    position: fixed; bottom: 0; left: 0; width: 100%;
+                    background: #111; color: white; padding: 15px;
+                    text-align: center; border-top: 2px solid #00C853;
+                    z-index: 9999; font-family: sans-serif;
+                    box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+                `;
+                hint.innerHTML = `
+                    <div style="margin-bottom: 8px; font-weight: bold; color: #00C853; font-size: 14px;">
+                        📲 ¡INSTALA LA APP OFICIAL!
+                    </div>
+                    <div style="font-size: 12px; color: #ccc; margin-bottom: 12px; line-height: 1.4;">
+                        Para jugar a pantalla completa y sin interrupciones:<br>
+                        1. Toca los <b>3 puntitos</b> arriba a la derecha.<br>
+                        2. Elige <b>"Instalar aplicación"</b>.
+                    </div>
+                    <button id="closeHint" style="background:#333; border:none; color:#fff; padding:8px 20px; border-radius:5px; font-size:12px;">
+                        Cerrar aviso
+                    </button>
+                `;
+                document.body.appendChild(hint);
+                document.getElementById('closeHint').onclick = () => hint.style.display='none';
+            }, 2000);
+        }
+    </script>
+
 </body>
 </html>
