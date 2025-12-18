@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casino VIP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* 1. El Casino ocupa toda la pantalla */
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Roboto', sans-serif; }
+        
+        /* 1. EL CASINO DE FONDO */
         iframe {
             width: 100vw;
             height: 100vh;
@@ -14,170 +16,176 @@
             display: block;
         }
 
-        /* 2. Tu Botón Flotante (El "Banco") */
-        .floating-btn {
+        /* 2. EL BOTÓN PRINCIPAL (Arriba Derecha) */
+        .header-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px; /* O 'left: 20px' si prefieres */
-            background: #00D100; /* Verde Billete */
-            color: white;
-            padding: 15px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            font-weight: bold;
-            font-size: 16px;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(90deg, #00C853, #64DD17); /* Verde Neón Vibrante */
+            color: #000; /* Texto negro para contraste máximo */
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 14px;
             cursor: pointer;
             z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 2px solid white;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            border: 2px solid #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
         }
+        .header-btn:active { transform: scale(0.95); }
 
-        /* 3. El Modal de Depósito (Oculto al principio) */
+        /* 3. EFECTO OSCURO (Overlay) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0, 0, 0, 0.85); /* Fondo muy oscuro */
+            backdrop-filter: blur(8px); /* Efecto vidrio borroso */
             z-index: 2000;
-            display: none; /* Oculto por defecto */
+            display: flex; /* Centrado perfecto */
             justify-content: center;
             align-items: center;
             flex-direction: column;
-        }
-        .modal-card {
-            background: #222;
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0,255,0,0.2);
-        }
-        .btn-mp {
-            background: #009ee3;
-            color: white;
-            padding: 12px;
-            width: 100%;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .close-btn {
-            margin-top: 15px;
-            background: transparent;
-            border: 1px solid #555;
-            color: #aaa;
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        /* 4. La Alerta de Credenciales (Copia Fácil) */
-        .login-helper {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffcc00;
-            color: black;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            z-index: 1500;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideDown 0.5s ease-out;
+        /* 4. LA TARJETA DEL POP-UP */
+        .modal-card {
+            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #444;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            position: relative;
         }
-        @keyframes slideDown { from {top: -50px;} to {top: 20px;} }
+
+        .modal-title { font-size: 22px; margin-bottom: 10px; color: #FFD700; /* Dorado */ }
+        .modal-text { font-size: 16px; color: #ccc; line-height: 1.5; margin-bottom: 20px; }
+        
+        .btn-action {
+            background: #009ee3; /* Azul MP */
+            color: white; padding: 15px; width: 100%; border: none; border-radius: 10px;
+            font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
+        
+        .btn-close {
+            margin-top: 15px; background: transparent; border: none; color: #777; cursor: pointer; text-decoration: underline;
+        }
+
+        /* Utilidades */
+        .hidden { display: none !important; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+        /* CBU Box */
+        .cbu-box {
+            background: #fff; color: #333; padding: 15px; border-radius: 10px; margin-top: 15px; word-break: break-all;
+        }
     </style>
 </head>
 <body>
 
     <iframe src="https://bet300.biz" id="casinoFrame"></iframe>
 
-    <div class="login-helper" id="loginHelper" onclick="copiarCredenciales()">
-        🔑 Tu Usuario y Clave es tu Celular. ¡Toca para copiar!
-    </div>
-
-    <button class="floating-btn" onclick="abrirCajero()">
-        💰 CARGAR / RETIRAR
+    <button class="header-btn" onclick="abrirCajero()">
+        💸 Depositar / Retirar
     </button>
 
-    <div class="modal-overlay" id="cajeroModal">
+    <div class="modal-overlay" id="welcomeModal">
         <div class="modal-card">
-            <h2>🏦 Tu Banco Personal</h2>
-            <p>Saldo actual: (Consultar en el juego)</p>
+            <h2 class="modal-title">🔐 TUS DATOS DE ACCESO</h2>
+            <p class="modal-text">
+                Para ingresar al casino, tu <b>Usuario</b> y <b>Contraseña</b> son tu número de celular.
+            </p>
+            <div style="background: #333; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 18px; color: #0f0; margin-bottom: 20px;">
+                <span id="telDisplay">Cargando...</span>
+            </div>
+            <button class="btn-action" style="background: #FFD700; color: black;" onclick="copiarYEntrar()">
+                📋 COPIAR Y ENTRAR
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="cajeroModal">
+        <div class="modal-card">
+            <h2 class="modal-title">🏦 CARGAR SALDO</h2>
+            <p class="modal-text">Elige un monto para cargar por MercadoPago:</p>
             
-            <hr style="border-color: #444;">
-
-            <h3>¿Cuánto quieres cargar?</h3>
-            <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 15px;">
-                <button onclick="seleccionarMonto(1000)">$1.000</button>
-                <button onclick="seleccionarMonto(5000)">$5.000</button>
-                <button onclick="seleccionarMonto(10000)">$10.000</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(1000)">$1.000</button>
+                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(5000)">$5.000</button>
+                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(10000)">$10.000</button>
+                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(20000)">$20.000</button>
             </div>
 
-            <div id="zonaCBU" style="display:none; background: #333; padding: 10px; border-radius: 5px; margin-top: 10px;">
-                <p style="font-size: 12px; color: #aaa;">Transfiere a:</p>
-                <b id="cbuTexto" style="font-size: 18px; color: #0f0;">Cargando...</b>
-                <br>
-                <button class="btn-mp" onclick="avisarPago()">✅ YA PAGUÉ</button>
+            <div id="zonaCBU" class="hidden">
+                <div class="cbu-box">
+                    <p style="margin:0; font-size:12px; color:#666;">Transferir a:</p>
+                    <b id="cbuTitular" style="font-size:14px;">Juan Perez</b><br>
+                    <span id="cbuNumero" style="font-size:18px; font-weight:bold;">00000031000...</span>
+                    <br><br>
+                    <button onclick="copiarCBU()" style="background:#eee; border:none; padding:5px 10px; border-radius:5px;">Copiar CBU 📄</button>
+                </div>
+                <button class="btn-action" onclick="avisarPago()">✅ YA TRANSFERÍ</button>
             </div>
 
-            <button class="close-btn" onclick="cerrarCajero()">Volver al Juego</button>
+            <button class="btn-close" onclick="cerrarCajero()">Volver al Juego</button>
         </div>
     </div>
 
     <script>
-        // DATOS DEL USUARIO (Vienen del registro anterior)
-        // Por ahora simulamos que se registró con este teléfono:
-        const miTelefono = localStorage.getItem('miTelefono') || '1155554444';
+        // Simulamos el teléfono del usuario (esto vendría del registro previo)
+        // Si no hay teléfono guardado, mostramos uno de ejemplo
+        const miTelefono = localStorage.getItem('miTelefono') || '1122334455';
+        document.getElementById('telDisplay').innerText = miTelefono;
 
-        function copiarCredenciales() {
+        // --- LÓGICA DE BIENVENIDA ---
+        function copiarYEntrar() {
             navigator.clipboard.writeText(miTelefono).then(() => {
-                alert('¡Copiado! Ahora pégalo en Usuario y Contraseña del casino.');
-                document.getElementById('loginHelper').style.display = 'none';
+                // Cerramos el modal
+                document.getElementById('welcomeModal').classList.add('hidden');
+                // Opcional: Mostrar una mini alerta de "Copiado"
+                alert('¡Copiado! Ahora pégalo en el login del casino.');
             });
         }
 
+        // --- LÓGICA DEL CAJERO ---
         function abrirCajero() {
-            document.getElementById('cajeroModal').style.display = 'flex';
+            document.getElementById('cajeroModal').classList.remove('hidden');
         }
 
         function cerrarCajero() {
-            document.getElementById('cajeroModal').style.display = 'none';
-            document.getElementById('zonaCBU').style.display = 'none';
+            document.getElementById('cajeroModal').classList.add('hidden');
+            document.getElementById('zonaCBU').classList.add('hidden');
         }
 
-        async function seleccionarMonto(monto) {
-            // AQUÍ CONECTAREMOS CON TU VPS Y EL GOOGLE SHEET
-            document.getElementById('zonaCBU').style.display = 'block';
-            document.getElementById('cbuTexto').innerText = "Juan Perez - CVU: 0000... (Simulado)";
-            // Cuando tengas la IP, descomentamos esto:
-            /*
-            const res = await fetch('http://TU-VPS-IP:3000/obtener-cbu');
-            const data = await res.json();
-            document.getElementById('cbuTexto').innerText = data.cbu;
-            */
+        async function pedirCBU(monto) {
+            // AQUÍ CONECTAREMOS CON TU VPS PARA LEER EL EXCEL
+            // Por ahora simulamos que encontramos una cuenta
+            document.getElementById('zonaCBU').classList.remove('hidden');
+            
+            // SIMULACIÓN (Esto se reemplazará por fetch al VPS)
+            document.getElementById('cbuTitular').innerText = "Monica Liliana (Simulado)";
+            document.getElementById('cbuNumero').innerText = "000000310006846...";
+        }
+
+        function copiarCBU() {
+            const cbu = document.getElementById('cbuNumero').innerText;
+            navigator.clipboard.writeText(cbu);
+            alert('CBU Copiado');
         }
 
         function avisarPago() {
-            alert('¡Aviso enviado a Telegram! Tu saldo llegará pronto.');
+            // Aquí se enviará la señal a Telegram
+            alert('¡Aviso enviado! Tu saldo se acreditará en breve.');
             cerrarCajero();
         }
-
-        // Ocultar la ayuda después de 10 segundos
-        setTimeout(() => {
-            document.getElementById('loginHelper').style.display = 'none';
-        }, 10000);
     </script>
 
 </body>
 </html>
-
