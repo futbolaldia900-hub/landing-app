@@ -8,257 +8,217 @@
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Roboto', sans-serif; }
         
-        /* 1. EL CASINO DE FONDO */
-        iframe {
-            width: 100vw; height: 100vh; border: none; display: block;
-        }
+        /* 1. EL CASINO (FONDO) */
+        iframe { width: 100vw; height: 100vh; border: none; display: block; }
 
-        /* 2. EL BOTÓN FLOTANTE (Oculto hasta registrarse) */
+        /* 2. BOTÓN PRINCIPAL (UBICACIÓN CORREGIDA) */
         .header-btn {
-            position: fixed; top: 15px; right: 15px;
+            position: fixed;
+            top: 10px;
+            /* Lo movemos a la izquierda para no tapar el botón "INGRESAR" del casino */
+            right: 120px; 
             background: linear-gradient(90deg, #00C853, #64DD17);
-            color: #000; padding: 10px 15px; border-radius: 8px;
-            font-weight: 900; font-size: 13px; cursor: pointer;
-            z-index: 1000; box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            color: #000; padding: 8px 15px; border-radius: 6px;
+            font-weight: 900; font-size: 12px; cursor: pointer;
+            z-index: 1000; box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
             border: 2px solid #fff; text-transform: uppercase;
+            display: flex; align-items: center; gap: 5px;
+        }
+        /* Ajuste para móviles muy pequeños */
+        @media (max-width: 380px) {
+            .header-btn { right: auto; left: 10px; top: 10px; }
         }
 
-        /* 3. CAPA OSCURA (Más transparente ahora: 0.7 en vez de 0.85) */
+        /* 3. CAPA OSCURA */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.65); /* <--- AQUÍ SE VE EL FONDO */
-            backdrop-filter: blur(4px); /* Menos borroso para ver el juego */
+            background: rgba(0, 0, 0, 0.75); /* Oscuro para resaltar el popup */
+            backdrop-filter: blur(5px);
             z-index: 2000; display: flex; justify-content: center; align-items: center;
             flex-direction: column; animation: fadeIn 0.3s ease-out;
         }
 
-        /* 4. TARJETA MODAL */
+        /* 4. TARJETAS */
         .modal-card {
             background: linear-gradient(145deg, #1a1a1a, #252525);
             color: white; padding: 25px; border-radius: 15px;
-            width: 85%; max-width: 380px; text-align: center;
-            border: 1px solid #444; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            max-height: 90vh; overflow-y: auto; /* Scroll si el teclado tapa */
+            width: 85%; max-width: 350px; text-align: center;
+            border: 1px solid #444; box-shadow: 0 10px 40px rgba(0,0,0,0.9);
         }
 
-        .modal-title { font-size: 20px; margin-bottom: 5px; color: #FFD700; text-transform: uppercase; }
-        .modal-subtitle { font-size: 12px; color: #aaa; margin-bottom: 15px; }
-
-        /* INPUTS DEL FORMULARIO */
-        .input-group { text-align: left; margin-bottom: 10px; }
-        .input-group label { display: block; font-size: 11px; color: #bbb; margin-bottom: 3px; margin-left: 5px;}
+        .modal-title { font-size: 18px; margin-bottom: 5px; color: #FFD700; text-transform: uppercase; }
+        .input-group { text-align: left; margin-bottom: 8px; }
+        .input-group label { font-size: 10px; color: #bbb; margin-left: 5px;}
         .custom-input {
-            width: 100%; padding: 12px; background: #333; border: 1px solid #555;
-            border-radius: 8px; color: white; font-size: 14px; box-sizing: border-box;
-            outline: none; transition: 0.3s;
+            width: 100%; padding: 10px; background: #333; border: 1px solid #555;
+            border-radius: 6px; color: white; font-size: 14px; outline: none;
         }
-        .custom-input:focus { border-color: #FFD700; background: #444; }
-
         .btn-action {
-            background: #FFD700; color: black; padding: 15px; width: 100%; border: none;
+            background: #FFD700; color: black; padding: 12px; width: 100%; border: none;
             border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
-            margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+            margin-top: 10px; text-transform: uppercase;
+        }
+        .link-text {
+            display: block; margin-top: 15px; color: #aaa; font-size: 12px; cursor: pointer; text-decoration: underline;
         }
         
-        .btn-close { margin-top: 15px; background: transparent; border: none; color: #777; cursor: pointer; text-decoration: underline; }
+        .cbu-box { background: #fff; color: #333; padding: 10px; border-radius: 8px; margin-top: 10px; word-break: break-all; }
         .hidden { display: none !important; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-        
-        /* CBU Box */
-        .cbu-box { background: #fff; color: #333; padding: 15px; border-radius: 10px; margin-top: 15px; word-break: break-all; }
     </style>
 </head>
 <body>
 
     <iframe src="https://bet300.biz" id="casinoFrame"></iframe>
 
-    <button class="header-btn hidden" id="depositBtn" onclick="abrirCajero()">
-        💰 Depositar / Retirar
+    <button class="header-btn" onclick="abrirCajero()">
+        <span>💸</span> DEPOSITAR / RETIRAR
     </button>
 
-    <div class="modal-overlay" id="registerModal">
+    <div class="modal-overlay hidden" id="registerModal">
         <div class="modal-card">
-            <h2 class="modal-title">🔥 REGÍSTRATE PARA JUGAR</h2>
-            <p class="modal-subtitle">Crea tu cuenta segura en 1 minuto.</p>
+            <h2 class="modal-title">🚀 CREAR CUENTA</h2>
+            <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Regístrate una vez y juega siempre.</p>
 
             <form id="registroForm" onsubmit="procesarRegistro(event)">
-                <div class="input-group">
-                    <label>Nombre</label>
-                    <input type="text" id="regNombre" class="custom-input" placeholder="Tu Nombre" required>
-                </div>
-                <div class="input-group">
-                    <label>Apellido</label>
-                    <input type="text" id="regApellido" class="custom-input" placeholder="Tu Apellido" required>
-                </div>
-                <div class="input-group">
-                    <label>Teléfono (WhatsApp)</label>
-                    <input type="tel" id="regTelefono" class="custom-input" placeholder="Ej: 1122334455" required>
-                </div>
-                <div class="input-group">
-                    <label>Email</label>
-                    <input type="email" id="regEmail" class="custom-input" placeholder="tucorreo@gmail.com" required>
-                </div>
+                <div class="input-group"><label>Nombre</label><input type="text" id="regNombre" class="custom-input" required></div>
+                <div class="input-group"><label>Apellido</label><input type="text" id="regApellido" class="custom-input" required></div>
+                <div class="input-group"><label>Teléfono</label><input type="tel" id="regTelefono" class="custom-input" placeholder="Tu número será tu usuario" required></div>
+                <div class="input-group"><label>Email</label><input type="email" id="regEmail" class="custom-input" required></div>
                 
-                <hr style="border-color: #444; margin: 15px 0;">
+                <hr style="border-color:#333; margin:10px 0;">
                 
-                <div class="input-group">
-                    <label>Usuario (Para entrar al casino)</label>
-                    <input type="text" id="regUser" class="custom-input" placeholder="Elige un usuario" required>
-                </div>
-                <div class="input-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="regPass" class="custom-input" placeholder="Elige una contraseña" required>
-                </div>
+                <div class="input-group"><label>Elige una Contraseña</label><input type="password" id="regPass" class="custom-input" required></div>
 
-                <button type="submit" class="btn-action">✅ CREAR CUENTA</button>
+                <button type="submit" class="btn-action">REGISTRARME</button>
             </form>
+            
+            <span class="link-text" onclick="cerrarTodo()">¿Ya tienes cuenta? Ingresar ahora</span>
         </div>
     </div>
 
-    <div class="modal-overlay hidden" id="successModal">
+    <div class="modal-overlay hidden" id="welcomeBackModal">
         <div class="modal-card">
-            <h2 class="modal-title">🎉 ¡CUENTA CREADA!</h2>
-            <p style="color:#ccc; font-size:14px; margin-bottom:20px;">
-                Toca "Copiar" y pégalos en el casino.
-            </p>
+            <h2 class="modal-title">👋 ¡HOLA DE NUEVO!</h2>
+            <p style="color:#ccc; font-size:13px; margin-bottom:15px;">Aquí tienes tus datos para entrar:</p>
 
-            <div style="background:#333; padding:10px; border-radius:5px; text-align:left; font-size:14px; color:#bbb; margin-bottom:10px;">
-                Usuario: <b style="color:#fff; float:right;" id="showUser">...</b>
+            <div style="background:#333; padding:8px; border-radius:5px; text-align:left; font-size:13px; color:#bbb; margin-bottom:5px;">
+                Usuario: <b style="color:#fff; float:right;" id="wbUser">...</b>
             </div>
-            <div style="background:#333; padding:10px; border-radius:5px; text-align:left; font-size:14px; color:#bbb;">
-                Contraseña: <b style="color:#fff; float:right;" id="showPass">...</b>
+            <div style="background:#333; padding:8px; border-radius:5px; text-align:left; font-size:13px; color:#bbb;">
+                Contraseña: <b style="color:#fff; float:right;" id="wbPass">...</b>
             </div>
 
-            <button class="btn-action" onclick="entrarAlCasino()">
-                📋 COPIAR Y ENTRAR
-            </button>
+            <button class="btn-action" onclick="copiarYEntrar()">📋 COPIAR CLAVE Y ENTRAR</button>
+            <span class="link-text" onclick="cerrarTodo()">Cerrar y entrar manual</span>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="cajeroModal">
         <div class="modal-card">
             <h2 class="modal-title">🏦 CARGAR SALDO</h2>
-            <p class="modal-subtitle">Elige monto para MercadoPago:</p>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(1000)">$1.000</button>
-                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(5000)">$5.000</button>
-                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(10000)">$10.000</button>
-                <button class="btn-action" style="background:#333; font-size:16px;" onclick="pedirCBU(20000)">$20.000</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top:15px;">
+                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(1000)">$1.000</button>
+                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(5000)">$5.000</button>
+                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(10000)">$10.000</button>
+                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(20000)">$20.000</button>
             </div>
-
             <div id="zonaCBU" class="hidden">
                 <div class="cbu-box">
-                    <p style="margin:0; font-size:12px; color:#666;">Transferir a:</p>
-                    <b id="cbuTitular" style="font-size:14px;">Cargando...</b><br>
-                    <span id="cbuNumero" style="font-size:16px; font-weight:bold;">...</span>
+                    <b id="cbuTitular" style="font-size:13px;">...</b><br>
+                    <span id="cbuNumero" style="font-size:15px; font-weight:bold;">...</span>
                     <br><br>
-                    <button onclick="copiarCBU()" style="background:#eee; border:none; padding:5px 10px; border-radius:5px;">Copiar CBU 📄</button>
+                    <button onclick="copiarCBU()" style="background:#eee; border:none; padding:5px; border-radius:4px;">Copiar 📄</button>
                 </div>
                 <button class="btn-action" style="background:#00C853;" onclick="avisarPago()">✅ YA TRANSFERÍ</button>
             </div>
-
-            <button class="btn-close" onclick="cerrarCajero()">Volver al Juego</button>
+            <span class="link-text" onclick="cerrarCajero()">Volver al Juego</span>
         </div>
     </div>
 
     <script>
-        // VARIABLES GLOBALES
-        let usuarioRegistrado = null;
-        let passRegistrado = null;
+        // --- 1. LÓGICA DE INICIO (MEMORIA) ---
+        window.onload = function() {
+            // Verificamos si ya existe un usuario guardado en este celular
+            const usuarioGuardado = localStorage.getItem('miUsuario');
+            const passGuardado = localStorage.getItem('miPass');
 
-        // 1. PROCESAR REGISTRO (CONECTA CON VPS)
+            if (usuarioGuardado && passGuardado) {
+                // YA ES CLIENTE -> Mostrar cartel de Bienvenida con sus datos
+                document.getElementById('wbUser').innerText = usuarioGuardado;
+                document.getElementById('wbPass').innerText = passGuardado;
+                document.getElementById('welcomeBackModal').classList.remove('hidden');
+            } else {
+                // ES NUEVO -> Mostrar Registro
+                document.getElementById('registerModal').classList.remove('hidden');
+            }
+        };
+
+        // --- 2. REGISTRO (GUARDAR DATOS) ---
         async function procesarRegistro(e) {
             e.preventDefault();
-            
-            // Recolectar datos
+            const btn = document.querySelector('#registroForm button');
+            btn.innerText = "⏳ CREANDO...";
+            btn.disabled = true;
+
             const datos = {
                 nombre: document.getElementById('regNombre').value,
                 apellido: document.getElementById('regApellido').value,
                 telefono: document.getElementById('regTelefono').value,
                 email: document.getElementById('regEmail').value,
-                username: document.getElementById('regUser').value, // <--- EL USUARIO ELIGE
-                password: document.getElementById('regPass').value  // <--- EL USUARIO ELIGE
+                password: document.getElementById('regPass').value
             };
 
-            // Mostrar "Cargando..." en el botón
-            const btn = document.querySelector('#registroForm button');
-            const textoOriginal = btn.innerText;
-            btn.innerText = "⏳ PROCESANDO...";
-            btn.disabled = true;
+            // AQUÍ IRÁ LA CONEXIÓN AL VPS (Fetch)
+            await new Promise(r => setTimeout(r, 1000)); // Simulamos espera
 
-            try {
-                // --- AQUÍ CONECTAMOS CON TU VPS ---
-                // Cuando tengas la IP, cambia 'localhost' por tu IP
-                // const res = await fetch('http://TU-IP-VPS:3000/crear-usuario', {
-                //    method: 'POST',
-                //    headers: { 'Content-Type': 'application/json' },
-                //    body: JSON.stringify(datos)
-                // });
-                // const resultado = await res.json();
-                
-                // --- SIMULACIÓN DE ÉXITO (PARA QUE VEAS EL DISEÑO) ---
-                await new Promise(r => setTimeout(r, 1500)); // Espera falsa de 1.5 seg
-                
-                // Guardamos datos
-                usuarioRegistrado = datos.username;
-                passRegistrado = datos.password;
-                
-                // Cambiamos de pantalla
-                document.getElementById('showUser').innerText = usuarioRegistrado;
-                document.getElementById('showPass').innerText = passRegistrado;
-                
-                document.getElementById('registerModal').classList.add('hidden');
-                document.getElementById('successModal').classList.remove('hidden');
+            // GUARDAMOS EN MEMORIA DEL CELULAR (LocalStorage)
+            // Usamos el teléfono como usuario
+            localStorage.setItem('miUsuario', datos.telefono);
+            localStorage.setItem('miPass', datos.password);
 
-            } catch (error) {
-                alert('Error al conectar con el servidor.');
-                btn.innerText = textoOriginal;
-                btn.disabled = false;
-            }
+            // Actualizamos el cartel de bienvenida y lo mostramos
+            document.getElementById('wbUser').innerText = datos.telefono;
+            document.getElementById('wbPass').innerText = datos.password;
+
+            document.getElementById('registerModal').classList.add('hidden');
+            document.getElementById('welcomeBackModal').classList.remove('hidden');
         }
 
-        // 2. ENTRAR AL CASINO (COPIA CREDENCIALES)
-        function entrarAlCasino() {
-            // Copia el Usuario al portapapeles
-            navigator.clipboard.writeText(passRegistrado).then(() => {
-                alert('¡Contraseña Copiada! \n\n1. El usuario es: ' + usuarioRegistrado + '\n2. Pega la contraseña en el casino.');
-                
-                // Oculta modales y muestra botón de depósito
-                document.getElementById('successModal').classList.add('hidden');
-                document.getElementById('depositBtn').classList.remove('hidden');
+        // --- 3. COPIAR Y ENTRAR ---
+        function copiarYEntrar() {
+            const pass = document.getElementById('wbPass').innerText;
+            navigator.clipboard.writeText(pass).then(() => {
+                alert('¡Contraseña Copiada!\n\nAhora toca "INGRESAR" arriba a la derecha y pega la contraseña.');
+                cerrarTodo();
             });
         }
 
-        // 3. LÓGICA DEL CAJERO
-        function abrirCajero() {
-            document.getElementById('cajeroModal').classList.remove('hidden');
+        function cerrarTodo() {
+            document.getElementById('registerModal').classList.add('hidden');
+            document.getElementById('welcomeBackModal').classList.add('hidden');
         }
 
-        function cerrarCajero() {
-            document.getElementById('cajeroModal').classList.add('hidden');
+        // --- 4. CAJERO ---
+        function abrirCajero() { document.getElementById('cajeroModal').classList.remove('hidden'); }
+        function cerrarCajero() { 
+            document.getElementById('cajeroModal').classList.add('hidden'); 
             document.getElementById('zonaCBU').classList.add('hidden');
         }
-
-        async function pedirCBU(monto) {
-            // AQUÍ PEDIREMOS EL CBU AL EXCEL DEL VPS
+        
+        function pedirCBU(monto) {
             document.getElementById('zonaCBU').classList.remove('hidden');
             document.getElementById('cbuTitular').innerText = "Juan Perez (MercadoPago)";
             document.getElementById('cbuNumero').innerText = "000000310006846...";
         }
-
         function copiarCBU() {
-            const cbu = document.getElementById('cbuNumero').innerText;
-            navigator.clipboard.writeText(cbu);
+            navigator.clipboard.writeText(document.getElementById('cbuNumero').innerText);
             alert('CBU Copiado');
         }
-
         function avisarPago() {
-            alert('¡Aviso enviado! \nTu saldo se acreditará en breve.');
+            alert('¡Aviso enviado! Acreditando...');
             cerrarCajero();
         }
     </script>
-
 </body>
 </html>
