@@ -4,109 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Casino Lobby</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* RESET BÁSICO */
+        /* RESET */
         * { box-sizing: border-box; }
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #000; }
         
         /* 1. EL CASINO (FONDO) */
         iframe { width: 100vw; height: 100vh; border: none; display: block; }
 
-        /* 2. BOTÓN PRINCIPAL (ARREGLADO: MÁS CHICO Y SEPARADO) */
+        /* 2. BOTÓN PRINCIPAL (UBICACIÓN INTELIGENTE) */
         .header-btn {
             position: fixed;
-            top: 12px;
-            /* MUCHO MÁS A LA IZQUIERDA AHORA */
-            right: 180px; 
-            /* DISEÑO MÁS SUTIL Y PEQUEÑO */
-            background: #00C853;
+            z-index: 1500; /* Por encima de todo */
+            background: #00C853; /* Verde Billete */
             color: #fff; 
-            padding: 6px 12px; /* Más chico */
-            border-radius: 4px;
-            font-weight: 700; 
-            font-size: 11px; /* Letra más chica */
+            padding: 10px 16px;
+            border-radius: 50px; /* Bordes redondos estilo App */
+            font-weight: 800; 
+            font-size: 12px; 
             cursor: pointer;
-            z-index: 1000; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.2);
             text-transform: uppercase;
-            display: flex; align-items: center; gap: 6px;
             letter-spacing: 0.5px;
+            display: flex; align-items: center; gap: 8px;
+            transition: transform 0.2s;
         }
-        /* Ajuste para celulares muy angostos */
-        @media (max-width: 400px) {
-            .header-btn { right: auto; left: 10px; top: 10px; }
+        .header-btn:active { transform: scale(0.95); }
+
+        /* --- POSICIÓN EN PC (Escritorio) --- */
+        /* Lo ponemos bien a la izquierda del botón "Ingresar" para que no se toquen */
+        @media (min-width: 481px) {
+            .header-btn {
+                top: 15px;
+                right: 250px; /* Lejos del botón Ingresar */
+            }
         }
 
-        /* 3. CAPA OSCURA (OVERLAY) - CENTRADO PERFECTO */
+        /* --- POSICIÓN EN CELULAR (Móvil) --- */
+        /* Aquí estaba el error. Ahora lo bajamos para que NO tape el logo */
+        @media (max-width: 480px) {
+            .header-btn {
+                top: 65px; /* Debajo de la barra del logo (que mide aprox 60px) */
+                right: 10px; /* Pegado a la derecha */
+                padding: 8px 14px;
+                font-size: 11px;
+                background: rgba(0, 200, 83, 0.95); /* Un pelín transparente para ver el juego */
+            }
+        }
+
+        /* 3. CAPA OSCURA (OVERLAY) */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); /* Fondo bien oscuro */
-            backdrop-filter: blur(3px);
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(5px);
             z-index: 2000; 
-            /* FLEXBOX PARA CENTRAR EXACTAMENTE */
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            animation: fadeIn 0.2s ease-out;
+            display: flex; justify-content: center; align-items: center;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        /* 4. TARJETAS MODALES (ESTÉTICA LIMPIA) */
+        /* 4. TARJETAS MODALES */
         .modal-card {
-            background: #1E1E1E; /* Gris oscuro plano, sin gradientes raros */
-            color: #fff; 
-            padding: 30px 25px; 
-            border-radius: 16px;
-            width: 90%; max-width: 340px; 
-            text-align: center;
-            border: 1px solid #333; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            background: #181818; 
+            color: #fff; padding: 30px 25px; border-radius: 20px;
+            width: 90%; max-width: 360px; text-align: center;
+            border: 1px solid #333; box-shadow: 0 20px 60px rgba(0,0,0,0.95);
         }
 
-        .modal-title { font-size: 18px; margin: 0 0 15px 0; color: #fff; font-weight: 700; }
-        .modal-text { font-size: 13px; color: #aaa; margin-bottom: 20px; line-height: 1.4; }
+        .modal-title { font-size: 20px; margin: 0 0 10px 0; color: #fff; font-weight: 800; letter-spacing: -0.5px; }
+        .modal-text { font-size: 13px; color: #aaa; margin-bottom: 25px; line-height: 1.5; }
 
-        /* CAJAS DE CREDENCIALES TIPO "COPY" */
-        .credential-box {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #333;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: monospace; /* Fuente tipo código para datos */
-            font-size: 14px;
-            color: #FFD700; /* Dorado para los datos */
-        }
-        .credential-label { font-size: 11px; color: #777; text-transform: uppercase; font-family: 'Inter', sans-serif;}
-        .copy-icon { font-size: 16px; color: #555; cursor: pointer; }
-
-        /* INPUTS Y BOTONES */
-        .input-group { text-align: left; margin-bottom: 12px; }
-        .input-group label { font-size: 11px; color: #aaa; display: block; margin-bottom: 4px; font-weight: 600;}
+        /* INPUTS */
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label { font-size: 12px; color: #ccc; display: block; margin-bottom: 6px; font-weight: 600;}
         .custom-input {
-            width: 100%; padding: 12px; background: #2A2A2A; border: 1px solid #444;
-            border-radius: 8px; color: white; font-size: 14px; outline: none; transition: 0.2s;
+            width: 100%; padding: 14px; background: #252525; border: 1px solid #444;
+            border-radius: 10px; color: white; font-size: 15px; outline: none; transition: 0.2s;
         }
         .custom-input:focus { border-color: #FFD700; background: #333; }
-        
-        .btn-action {
-            background: #FFD700; /* Dorado Premium */
-            color: #000; padding: 14px; width: 100%; border: none;
-            border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
-            margin-top: 15px; text-transform: uppercase; transition: 0.2s;
-        }
-        .btn-action:active { transform: scale(0.98); }
+        .custom-input::placeholder { color: #555; }
 
-        .link-text {
-            display: block; margin-top: 20px; color: #888; font-size: 12px; cursor: pointer; text-decoration: none;
+        /* BOTÓN DE ACCIÓN (DORADO) */
+        .btn-action {
+            background: linear-gradient(180deg, #FFD700, #FFC107); 
+            color: #000; padding: 16px; width: 100%; border: none;
+            border-radius: 10px; font-size: 16px; font-weight: 800; cursor: pointer;
+            margin-top: 10px; text-transform: uppercase; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
         }
-        .link-text:hover { color: #aaa; text-decoration: underline; }
-        
-        /* UTILIDADES */
+        .btn-action:active { transform: translateY(2px); }
+
+        /* DATOS DE CREDENCIALES */
+        .credential-box {
+            background: rgba(255,255,255,0.08); border: 1px solid #444; padding: 12px;
+            border-radius: 10px; margin-bottom: 12px; display: flex;
+            justify-content: space-between; align-items: center;
+            font-family: monospace; font-size: 15px; color: #FFD700; cursor: pointer;
+        }
+        .credential-box:active { background: rgba(255,255,255,0.15); }
+
+        /* LINK "YA TENGO CUENTA" (MEJORADO) */
+        .link-text { 
+            display: inline-block; 
+            margin-top: 25px; 
+            color: #aaa; 
+            font-size: 14px; /* Más grande */
+            font-weight: 600;
+            cursor: pointer; 
+            text-decoration: none; 
+            border-bottom: 1px solid transparent;
+            padding-bottom: 2px;
+        }
+        .link-text:hover { color: #fff; border-bottom: 1px solid #fff; }
+
         .hidden { display: none !important; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
     </style>
@@ -115,132 +125,162 @@
 
     <iframe src="https://bet300.biz" id="casinoFrame"></iframe>
 
-    <button class="header-btn" onclick="abrirCajero()">
-        <span>💰</span> DEPOSITAR / RETIRAR
-    </button>
+    <div class="header-btn" onclick="abrirCajero()">
+        <span>💸</span> DEPOSITAR / RETIRAR
+    </div>
 
     <div class="modal-overlay hidden" id="registerModal">
         <div class="modal-card">
-            <h2 class="modal-title">Crear Cuenta</h2>
-            <p class="modal-text">Completa tus datos una sola vez.</p>
+            <h2 class="modal-title">CREAR CUENTA</h2>
+            <p class="modal-text">Regístrate en segundos para comenzar a ganar.</p>
 
             <form id="registroForm" onsubmit="procesarRegistro(event)">
-                <div class="input-group"><label>Nombre</label><input type="text" id="regNombre" class="custom-input" required></div>
-                <div class="input-group"><label>Apellido</label><input type="text" id="regApellido" class="custom-input" required></div>
-                <div class="input-group"><label>Teléfono (Será tu Usuario)</label><input type="tel" id="regTelefono" class="custom-input" placeholder="Ej: 11223344" required></div>
-                <div class="input-group"><label>Email</label><input type="email" id="regEmail" class="custom-input" required></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="input-group">
+                        <label>Nombre</label>
+                        <input type="text" id="regNombre" class="custom-input" placeholder="Juan" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Apellido</label>
+                        <input type="text" id="regApellido" class="custom-input" placeholder="Pérez" required>
+                    </div>
+                </div>
                 
-                <hr style="border-color:#333; margin:15px 0; opacity: 0.5;">
-                
-                <div class="input-group"><label>Crea una Contraseña</label><input type="password" id="regPass" class="custom-input" required></div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" class="custom-input" placeholder="hola@gmail.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Teléfono</label>
+                    <input type="tel" id="regTelefono" class="custom-input" placeholder="11 2233 4455" required>
+                </div>
+
+                <div style="height: 1px; background: #333; margin: 20px 0;"></div>
+
+                <div class="input-group">
+                    <label style="color:#FFD700;">👤 Elige tu Usuario</label>
+                    <input type="text" id="regUser" class="custom-input" placeholder="Ej: campeon99" required>
+                </div>
+                <div class="input-group">
+                    <label style="color:#FFD700;">🔑 Elige tu Contraseña</label>
+                    <input type="password" id="regPass" class="custom-input" required>
+                </div>
 
                 <button type="submit" class="btn-action">REGISTRARME AHORA</button>
             </form>
             
-            <span class="link-text" onclick="cerrarTodo()">Ya tengo cuenta, quiero ingresar.</span>
+            <div class="link-text" onclick="cerrarTodo()">
+                ¿Ya tienes cuenta? <b>INGRESAR AQUÍ</b>
+            </div>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="welcomeBackModal">
         <div class="modal-card">
-            <h2 class="modal-title">¡Hola de nuevo! 👋</h2>
-            <p class="modal-text">Aquí tienes tus datos. Cópialos y entra al casino.</p>
+            <h2 class="modal-title">¡HOLA DE NUEVO! 👋</h2>
+            <p class="modal-text">Toca tus datos para copiar y entra al casino.</p>
 
             <div class="credential-box" onclick="copiarDato('wbUser')">
-                <div>
-                    <div class="credential-label">Usuario / Teléfono</div>
-                    <div id="wbUser">...</div>
-                </div>
-                <div class="copy-icon">📋</div>
+                <span id="wbUser">...</span> <span>📋</span>
             </div>
 
             <div class="credential-box" onclick="copiarDato('wbPass')">
-                <div>
-                    <div class="credential-label">Contraseña</div>
-                    <div id="wbPass">...</div>
-                </div>
-                <div class="copy-icon">📋</div>
+                <span id="wbPass">...</span> <span>📋</span>
             </div>
 
-            <button class="btn-action" onclick="copiarPassYEntrar()" style="background: #00C853; color: white;">
+            <button class="btn-action" onclick="copiarPassYEntrar()" style="background: #00C853; color: #fff;">
                 COPIAR CLAVE Y ENTRAR
             </button>
-            <span class="link-text" onclick="cerrarTodo()">Cerrar ventana</span>
+            
+            <div class="link-text" onclick="cerrarTodo()">
+                Cerrar ventana
+            </div>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="cajeroModal">
         <div class="modal-card">
-            <h2 class="modal-title">Cargar Saldo</h2>
-            <p class="modal-text">Próximamente disponible...</p>
-            <button class="btn-action" style="background:#333; color: #aaa;" onclick="cerrarCajero()">Volver</button>
+            <h2 class="modal-title">CARGAR SALDO</h2>
+            <p class="modal-text">Conectando con el servidor de pagos...</p>
+            
+            <div style="background:#222; padding:20px; border-radius:10px; margin-bottom:20px;">
+                <span style="font-size:30px;">⏳</span>
+                <p style="font-size:12px; color:#666;">Esperando conexión...</p>
+            </div>
+
+            <button class="btn-action" style="background:#333; color:#aaa; font-size:14px;" onclick="cerrarCajero()">VOLVER AL JUEGO</button>
         </div>
     </div>
 
     <script>
-        // --- 1. INICIO (MEMORIA) ---
+        // --- 1. LÓGICA DE MEMORIA (LocalStorage) ---
         window.onload = function() {
             const usuarioGuardado = localStorage.getItem('miUsuario');
             const passGuardado = localStorage.getItem('miPass');
 
             if (usuarioGuardado && passGuardado) {
-                // YA ES CLIENTE
+                // Si ya tiene datos guardados, mostramos el panel de bienvenida
                 document.getElementById('wbUser').innerText = usuarioGuardado;
                 document.getElementById('wbPass').innerText = passGuardado;
                 document.getElementById('welcomeBackModal').classList.remove('hidden');
             } else {
-                // ES NUEVO
+                // Si es nuevo, mostramos el registro
                 document.getElementById('registerModal').classList.remove('hidden');
             }
         };
 
-        // --- 2. REGISTRO ---
+        // --- 2. PROCESAR REGISTRO ---
         async function procesarRegistro(e) {
             e.preventDefault();
             const btn = document.querySelector('#registroForm button');
-            btn.innerText = "⏳ PROCESANDO...";
+            const textoOriginal = btn.innerText;
+            btn.innerText = "⏳ CREANDO CUENTA...";
             btn.disabled = true;
 
             const datos = {
-                telefono: document.getElementById('regTelefono').value,
+                username: document.getElementById('regUser').value,
                 password: document.getElementById('regPass').value
             };
 
-            // AQUÍ IRÁ LA CONEXIÓN AL VPS CUANDO ME DES LA IP 
-            await new Promise(r => setTimeout(r, 1000)); // Simulamos
+            // SIMULACIÓN DE CONEXIÓN AL VPS
+            // (Aquí pondremos el fetch real cuando llegue la IP)
+            await new Promise(r => setTimeout(r, 1500)); 
 
-            localStorage.setItem('miUsuario', datos.telefono);
+            // Guardar en el celular del cliente
+            localStorage.setItem('miUsuario', datos.username);
             localStorage.setItem('miPass', datos.password);
 
-            document.getElementById('wbUser').innerText = datos.telefono;
+            // Actualizar vista
+            document.getElementById('wbUser').innerText = datos.username;
             document.getElementById('wbPass').innerText = datos.password;
 
             document.getElementById('registerModal').classList.add('hidden');
             document.getElementById('welcomeBackModal').classList.remove('hidden');
         }
 
-        // --- 3. UTILIDADES DE COPIADO ---
-        function copiarDato(elementId) {
-            const texto = document.getElementById(elementId).innerText;
+        // --- 3. FUNCIONES DE COPIADO ---
+        function copiarDato(id) {
+            const texto = document.getElementById(id).innerText;
             navigator.clipboard.writeText(texto);
-            // Feedback visual rápido
-            const originalBg = document.getElementById(elementId).parentElement.parentElement.style.background;
-            document.getElementById(elementId).parentElement.parentElement.style.background = "rgba(0,200,83,0.2)";
-            setTimeout(() => {
-                 document.getElementById(elementId).parentElement.parentElement.style.background = originalBg;
-            }, 300);
+            // Efecto visual de copiado
+            const box = document.getElementById(id).parentElement;
+            box.style.background = "rgba(0, 200, 83, 0.3)";
+            setTimeout(() => { box.style.background = "rgba(255,255,255,0.08)"; }, 200);
         }
 
         function copiarPassYEntrar() {
-            copiarDato('wbPass');
-            alert('Contraseña copiada. ¡Pégala en el casino!');
-            cerrarTodo();
+            const pass = document.getElementById('wbPass').innerText;
+            navigator.clipboard.writeText(pass).then(() => {
+                alert('¡Contraseña Copiada! \n\n1. Toca INGRESAR (arriba a la derecha).\n2. Pega tu contraseña.');
+                cerrarTodo();
+            });
         }
 
         function cerrarTodo() {
             document.getElementById('registerModal').classList.add('hidden');
             document.getElementById('welcomeBackModal').classList.add('hidden');
         }
+
         function abrirCajero() { document.getElementById('cajeroModal').classList.remove('hidden'); }
         function cerrarCajero() { document.getElementById('cajeroModal').classList.add('hidden'); }
     </script>
