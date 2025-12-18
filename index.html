@@ -3,66 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Casino VIP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Casino Lobby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Roboto', sans-serif; }
+        /* RESET BÁSICO */
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #000; }
         
         /* 1. EL CASINO (FONDO) */
         iframe { width: 100vw; height: 100vh; border: none; display: block; }
 
-        /* 2. BOTÓN PRINCIPAL (UBICACIÓN CORREGIDA) */
+        /* 2. BOTÓN PRINCIPAL (ARREGLADO: MÁS CHICO Y SEPARADO) */
         .header-btn {
             position: fixed;
-            top: 10px;
-            /* Lo movemos a la izquierda para no tapar el botón "INGRESAR" del casino */
-            right: 120px; 
-            background: linear-gradient(90deg, #00C853, #64DD17);
-            color: #000; padding: 8px 15px; border-radius: 6px;
-            font-weight: 900; font-size: 12px; cursor: pointer;
-            z-index: 1000; box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
-            border: 2px solid #fff; text-transform: uppercase;
-            display: flex; align-items: center; gap: 5px;
+            top: 12px;
+            /* MUCHO MÁS A LA IZQUIERDA AHORA */
+            right: 180px; 
+            /* DISEÑO MÁS SUTIL Y PEQUEÑO */
+            background: #00C853;
+            color: #fff; 
+            padding: 6px 12px; /* Más chico */
+            border-radius: 4px;
+            font-weight: 700; 
+            font-size: 11px; /* Letra más chica */
+            cursor: pointer;
+            z-index: 1000; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-transform: uppercase;
+            display: flex; align-items: center; gap: 6px;
+            letter-spacing: 0.5px;
         }
-        /* Ajuste para móviles muy pequeños */
-        @media (max-width: 380px) {
+        /* Ajuste para celulares muy angostos */
+        @media (max-width: 400px) {
             .header-btn { right: auto; left: 10px; top: 10px; }
         }
 
-        /* 3. CAPA OSCURA */
+        /* 3. CAPA OSCURA (OVERLAY) - CENTRADO PERFECTO */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75); /* Oscuro para resaltar el popup */
-            backdrop-filter: blur(5px);
-            z-index: 2000; display: flex; justify-content: center; align-items: center;
-            flex-direction: column; animation: fadeIn 0.3s ease-out;
+            background: rgba(0, 0, 0, 0.8); /* Fondo bien oscuro */
+            backdrop-filter: blur(3px);
+            z-index: 2000; 
+            /* FLEXBOX PARA CENTRAR EXACTAMENTE */
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            animation: fadeIn 0.2s ease-out;
         }
 
-        /* 4. TARJETAS */
+        /* 4. TARJETAS MODALES (ESTÉTICA LIMPIA) */
         .modal-card {
-            background: linear-gradient(145deg, #1a1a1a, #252525);
-            color: white; padding: 25px; border-radius: 15px;
-            width: 85%; max-width: 350px; text-align: center;
-            border: 1px solid #444; box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            background: #1E1E1E; /* Gris oscuro plano, sin gradientes raros */
+            color: #fff; 
+            padding: 30px 25px; 
+            border-radius: 16px;
+            width: 90%; max-width: 340px; 
+            text-align: center;
+            border: 1px solid #333; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        .modal-title { font-size: 18px; margin-bottom: 5px; color: #FFD700; text-transform: uppercase; }
-        .input-group { text-align: left; margin-bottom: 8px; }
-        .input-group label { font-size: 10px; color: #bbb; margin-left: 5px;}
+        .modal-title { font-size: 18px; margin: 0 0 15px 0; color: #fff; font-weight: 700; }
+        .modal-text { font-size: 13px; color: #aaa; margin-bottom: 20px; line-height: 1.4; }
+
+        /* CAJAS DE CREDENCIALES TIPO "COPY" */
+        .credential-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace; /* Fuente tipo código para datos */
+            font-size: 14px;
+            color: #FFD700; /* Dorado para los datos */
+        }
+        .credential-label { font-size: 11px; color: #777; text-transform: uppercase; font-family: 'Inter', sans-serif;}
+        .copy-icon { font-size: 16px; color: #555; cursor: pointer; }
+
+        /* INPUTS Y BOTONES */
+        .input-group { text-align: left; margin-bottom: 12px; }
+        .input-group label { font-size: 11px; color: #aaa; display: block; margin-bottom: 4px; font-weight: 600;}
         .custom-input {
-            width: 100%; padding: 10px; background: #333; border: 1px solid #555;
-            border-radius: 6px; color: white; font-size: 14px; outline: none;
+            width: 100%; padding: 12px; background: #2A2A2A; border: 1px solid #444;
+            border-radius: 8px; color: white; font-size: 14px; outline: none; transition: 0.2s;
         }
-        .btn-action {
-            background: #FFD700; color: black; padding: 12px; width: 100%; border: none;
-            border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
-            margin-top: 10px; text-transform: uppercase;
-        }
-        .link-text {
-            display: block; margin-top: 15px; color: #aaa; font-size: 12px; cursor: pointer; text-decoration: underline;
-        }
+        .custom-input:focus { border-color: #FFD700; background: #333; }
         
-        .cbu-box { background: #fff; color: #333; padding: 10px; border-radius: 8px; margin-top: 10px; word-break: break-all; }
+        .btn-action {
+            background: #FFD700; /* Dorado Premium */
+            color: #000; padding: 14px; width: 100%; border: none;
+            border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
+            margin-top: 15px; text-transform: uppercase; transition: 0.2s;
+        }
+        .btn-action:active { transform: scale(0.98); }
+
+        .link-text {
+            display: block; margin-top: 20px; color: #888; font-size: 12px; cursor: pointer; text-decoration: none;
+        }
+        .link-text:hover { color: #aaa; text-decoration: underline; }
+        
+        /* UTILIDADES */
         .hidden { display: none !important; }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
     </style>
@@ -72,112 +116,102 @@
     <iframe src="https://bet300.biz" id="casinoFrame"></iframe>
 
     <button class="header-btn" onclick="abrirCajero()">
-        <span>💸</span> DEPOSITAR / RETIRAR
+        <span>💰</span> DEPOSITAR / RETIRAR
     </button>
 
     <div class="modal-overlay hidden" id="registerModal">
         <div class="modal-card">
-            <h2 class="modal-title">🚀 CREAR CUENTA</h2>
-            <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Regístrate una vez y juega siempre.</p>
+            <h2 class="modal-title">Crear Cuenta</h2>
+            <p class="modal-text">Completa tus datos una sola vez.</p>
 
             <form id="registroForm" onsubmit="procesarRegistro(event)">
                 <div class="input-group"><label>Nombre</label><input type="text" id="regNombre" class="custom-input" required></div>
                 <div class="input-group"><label>Apellido</label><input type="text" id="regApellido" class="custom-input" required></div>
-                <div class="input-group"><label>Teléfono</label><input type="tel" id="regTelefono" class="custom-input" placeholder="Tu número será tu usuario" required></div>
+                <div class="input-group"><label>Teléfono (Será tu Usuario)</label><input type="tel" id="regTelefono" class="custom-input" placeholder="Ej: 11223344" required></div>
                 <div class="input-group"><label>Email</label><input type="email" id="regEmail" class="custom-input" required></div>
                 
-                <hr style="border-color:#333; margin:10px 0;">
+                <hr style="border-color:#333; margin:15px 0; opacity: 0.5;">
                 
-                <div class="input-group"><label>Elige una Contraseña</label><input type="password" id="regPass" class="custom-input" required></div>
+                <div class="input-group"><label>Crea una Contraseña</label><input type="password" id="regPass" class="custom-input" required></div>
 
-                <button type="submit" class="btn-action">REGISTRARME</button>
+                <button type="submit" class="btn-action">REGISTRARME AHORA</button>
             </form>
             
-            <span class="link-text" onclick="cerrarTodo()">¿Ya tienes cuenta? Ingresar ahora</span>
+            <span class="link-text" onclick="cerrarTodo()">Ya tengo cuenta, quiero ingresar.</span>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="welcomeBackModal">
         <div class="modal-card">
-            <h2 class="modal-title">👋 ¡HOLA DE NUEVO!</h2>
-            <p style="color:#ccc; font-size:13px; margin-bottom:15px;">Aquí tienes tus datos para entrar:</p>
+            <h2 class="modal-title">¡Hola de nuevo! 👋</h2>
+            <p class="modal-text">Aquí tienes tus datos. Cópialos y entra al casino.</p>
 
-            <div style="background:#333; padding:8px; border-radius:5px; text-align:left; font-size:13px; color:#bbb; margin-bottom:5px;">
-                Usuario: <b style="color:#fff; float:right;" id="wbUser">...</b>
-            </div>
-            <div style="background:#333; padding:8px; border-radius:5px; text-align:left; font-size:13px; color:#bbb;">
-                Contraseña: <b style="color:#fff; float:right;" id="wbPass">...</b>
+            <div class="credential-box" onclick="copiarDato('wbUser')">
+                <div>
+                    <div class="credential-label">Usuario / Teléfono</div>
+                    <div id="wbUser">...</div>
+                </div>
+                <div class="copy-icon">📋</div>
             </div>
 
-            <button class="btn-action" onclick="copiarYEntrar()">📋 COPIAR CLAVE Y ENTRAR</button>
-            <span class="link-text" onclick="cerrarTodo()">Cerrar y entrar manual</span>
+            <div class="credential-box" onclick="copiarDato('wbPass')">
+                <div>
+                    <div class="credential-label">Contraseña</div>
+                    <div id="wbPass">...</div>
+                </div>
+                <div class="copy-icon">📋</div>
+            </div>
+
+            <button class="btn-action" onclick="copiarPassYEntrar()" style="background: #00C853; color: white;">
+                COPIAR CLAVE Y ENTRAR
+            </button>
+            <span class="link-text" onclick="cerrarTodo()">Cerrar ventana</span>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="cajeroModal">
         <div class="modal-card">
-            <h2 class="modal-title">🏦 CARGAR SALDO</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top:15px;">
-                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(1000)">$1.000</button>
-                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(5000)">$5.000</button>
-                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(10000)">$10.000</button>
-                <button class="btn-action" style="background:#333; font-size:14px; margin:0;" onclick="pedirCBU(20000)">$20.000</button>
-            </div>
-            <div id="zonaCBU" class="hidden">
-                <div class="cbu-box">
-                    <b id="cbuTitular" style="font-size:13px;">...</b><br>
-                    <span id="cbuNumero" style="font-size:15px; font-weight:bold;">...</span>
-                    <br><br>
-                    <button onclick="copiarCBU()" style="background:#eee; border:none; padding:5px; border-radius:4px;">Copiar 📄</button>
-                </div>
-                <button class="btn-action" style="background:#00C853;" onclick="avisarPago()">✅ YA TRANSFERÍ</button>
-            </div>
-            <span class="link-text" onclick="cerrarCajero()">Volver al Juego</span>
+            <h2 class="modal-title">Cargar Saldo</h2>
+            <p class="modal-text">Próximamente disponible...</p>
+            <button class="btn-action" style="background:#333; color: #aaa;" onclick="cerrarCajero()">Volver</button>
         </div>
     </div>
 
     <script>
-        // --- 1. LÓGICA DE INICIO (MEMORIA) ---
+        // --- 1. INICIO (MEMORIA) ---
         window.onload = function() {
-            // Verificamos si ya existe un usuario guardado en este celular
             const usuarioGuardado = localStorage.getItem('miUsuario');
             const passGuardado = localStorage.getItem('miPass');
 
             if (usuarioGuardado && passGuardado) {
-                // YA ES CLIENTE -> Mostrar cartel de Bienvenida con sus datos
+                // YA ES CLIENTE
                 document.getElementById('wbUser').innerText = usuarioGuardado;
                 document.getElementById('wbPass').innerText = passGuardado;
                 document.getElementById('welcomeBackModal').classList.remove('hidden');
             } else {
-                // ES NUEVO -> Mostrar Registro
+                // ES NUEVO
                 document.getElementById('registerModal').classList.remove('hidden');
             }
         };
 
-        // --- 2. REGISTRO (GUARDAR DATOS) ---
+        // --- 2. REGISTRO ---
         async function procesarRegistro(e) {
             e.preventDefault();
             const btn = document.querySelector('#registroForm button');
-            btn.innerText = "⏳ CREANDO...";
+            btn.innerText = "⏳ PROCESANDO...";
             btn.disabled = true;
 
             const datos = {
-                nombre: document.getElementById('regNombre').value,
-                apellido: document.getElementById('regApellido').value,
                 telefono: document.getElementById('regTelefono').value,
-                email: document.getElementById('regEmail').value,
                 password: document.getElementById('regPass').value
             };
 
-            // AQUÍ IRÁ LA CONEXIÓN AL VPS (Fetch)
-            await new Promise(r => setTimeout(r, 1000)); // Simulamos espera
+            // AQUÍ IRÁ LA CONEXIÓN AL VPS CUANDO ME DES LA IP 
+            await new Promise(r => setTimeout(r, 1000)); // Simulamos
 
-            // GUARDAMOS EN MEMORIA DEL CELULAR (LocalStorage)
-            // Usamos el teléfono como usuario
             localStorage.setItem('miUsuario', datos.telefono);
             localStorage.setItem('miPass', datos.password);
 
-            // Actualizamos el cartel de bienvenida y lo mostramos
             document.getElementById('wbUser').innerText = datos.telefono;
             document.getElementById('wbPass').innerText = datos.password;
 
@@ -185,40 +219,30 @@
             document.getElementById('welcomeBackModal').classList.remove('hidden');
         }
 
-        // --- 3. COPIAR Y ENTRAR ---
-        function copiarYEntrar() {
-            const pass = document.getElementById('wbPass').innerText;
-            navigator.clipboard.writeText(pass).then(() => {
-                alert('¡Contraseña Copiada!\n\nAhora toca "INGRESAR" arriba a la derecha y pega la contraseña.');
-                cerrarTodo();
-            });
+        // --- 3. UTILIDADES DE COPIADO ---
+        function copiarDato(elementId) {
+            const texto = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(texto);
+            // Feedback visual rápido
+            const originalBg = document.getElementById(elementId).parentElement.parentElement.style.background;
+            document.getElementById(elementId).parentElement.parentElement.style.background = "rgba(0,200,83,0.2)";
+            setTimeout(() => {
+                 document.getElementById(elementId).parentElement.parentElement.style.background = originalBg;
+            }, 300);
+        }
+
+        function copiarPassYEntrar() {
+            copiarDato('wbPass');
+            alert('Contraseña copiada. ¡Pégala en el casino!');
+            cerrarTodo();
         }
 
         function cerrarTodo() {
             document.getElementById('registerModal').classList.add('hidden');
             document.getElementById('welcomeBackModal').classList.add('hidden');
         }
-
-        // --- 4. CAJERO ---
         function abrirCajero() { document.getElementById('cajeroModal').classList.remove('hidden'); }
-        function cerrarCajero() { 
-            document.getElementById('cajeroModal').classList.add('hidden'); 
-            document.getElementById('zonaCBU').classList.add('hidden');
-        }
-        
-        function pedirCBU(monto) {
-            document.getElementById('zonaCBU').classList.remove('hidden');
-            document.getElementById('cbuTitular').innerText = "Juan Perez (MercadoPago)";
-            document.getElementById('cbuNumero').innerText = "000000310006846...";
-        }
-        function copiarCBU() {
-            navigator.clipboard.writeText(document.getElementById('cbuNumero').innerText);
-            alert('CBU Copiado');
-        }
-        function avisarPago() {
-            alert('¡Aviso enviado! Acreditando...');
-            cerrarCajero();
-        }
+        function cerrarCajero() { document.getElementById('cajeroModal').classList.add('hidden'); }
     </script>
 </body>
 </html>
