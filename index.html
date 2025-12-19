@@ -15,33 +15,16 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #000; }
         iframe { width: 100vw; height: 100vh; border: none; display: block; }
-
-        .header-btn {
-            position: fixed; z-index: 1500; background: #00C853; color: #fff; 
-            padding: 10px 16px; border-radius: 50px; font-weight: 800; font-size: 12px; 
-            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2);
-            text-transform: uppercase; display: flex; align-items: center; gap: 8px; transition: 0.2s;
-        }
-
-        @media (min-width: 481px) { .header-btn { top: 15px; right: 260px; } }
+        .header-btn { position: fixed; z-index: 1500; background: #00C853; color: #fff; padding: 10px 16px; border-radius: 50px; font-weight: 800; font-size: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2); text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
         @media (max-width: 480px) { .header-btn { top: 65px; right: 10px; padding: 8px 14px; font-size: 11px; } }
-
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
-            z-index: 2000; display: flex; justify-content: center; align-items: center;
-        }
-        .modal-card {
-            background: #181818; color: #fff; padding: 30px 25px; border-radius: 20px;
-            width: 92%; max-width: 360px; text-align: center; border: 1px solid #333;
-        }
-        .modal-title { font-size: 20px; margin: 0 0 10px 0; font-weight: 800; }
+        @media (min-width: 481px) { .header-btn { top: 15px; right: 260px; } }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .modal-card { background: #181818; color: #fff; padding: 30px 25px; border-radius: 20px; width: 92%; max-width: 360px; text-align: center; border: 1px solid #333; }
         .input-group { text-align: left; margin-bottom: 12px; }
         .input-group label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; font-weight: 700; }
         .custom-input { width: 100%; padding: 12px; background: #222; border: 1px solid #444; border-radius: 10px; color: white; font-size: 14px; outline: none; }
         .btn-action { background: linear-gradient(180deg, #FFD700, #FFC107); color: #000; padding: 16px; width: 100%; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-        .link-text { display: inline-block; margin-top: 20px; color: #FFD700; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: underline; }
-        .credential-box { background: #252525; border: 1px solid #444; padding: 12px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-family: monospace; font-size: 15px; color: #FFD700; }
+        .credential-box { background: #252525; border: 1px solid #444; padding: 12px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-family: monospace; font-size: 15px; color: #FFD700; cursor: pointer; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -55,123 +38,101 @@
 
     <div class="modal-overlay hidden" id="registerModal">
         <div class="modal-card">
-            <h2 class="modal-title">¡CREAR CUENTA!</h2>
+            <h2 style="margin:0 0 10px 0;">¡CREAR CUENTA!</h2>
             <form id="registroForm" onsubmit="procesarRegistro(event)">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <div class="input-group"><label>Nombre</label><input type="text" id="regNombre" class="custom-input" required></div>
-                    <div class="input-group"><label>Apellido</label><input type="text" id="regApellido" class="custom-input" required></div>
-                </div>
-                <div class="input-group"><label>Email</label><input type="email" id="regEmail" class="custom-input" required></div>
-                <div class="input-group"><label>Teléfono</label><input type="tel" id="regTelefono" class="custom-input" required></div>
                 <div class="input-group"><label>Usuario</label><input type="text" id="regUser" class="custom-input" required></div>
                 <div class="input-group"><label>Contraseña</label><input type="password" id="regPass" class="custom-input" required></div>
-                <button type="submit" class="btn-action">CREAR CUENTA</button>
+                <div class="input-group"><label>WhatsApp</label><input type="tel" id="regTel" class="custom-input" placeholder="11..." required></div>
+                <button type="submit" class="btn-action">REGISTRARME AHORA</button>
             </form>
-            <div class="link-text" onclick="cerrarTodo()">YA TENGO CUENTA</div>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="welcomeBackModal">
         <div class="modal-card">
-            <h2 class="modal-title">TUS DATOS 👋</h2>
-            <div class="credential-box" onclick="copiarDato('wbUser')"><span id="wbUser">...</span> 📋</div>
-            <div class="credential-box" onclick="copiarDato('wbPass')"><span id="wbPass">...</span> 📋</div>
-            <button class="btn-action" onclick="copiarPassYEntrar()" style="background: #00C853; color: #fff;">ENTRAR AL JUEGO</button>
+            <h2 style="margin:0 0 10px 0;">TUS DATOS 👋</h2>
+            <div class="credential-box" onclick="copiar('wbUser')"><span id="wbUser"></span> 📋</div>
+            <div class="credential-box" onclick="copiar('wbPass')"><span id="wbPass"></span> 📋</div>
+            <button class="btn-action" onclick="cerrarTodo()">ENTRAR AL JUEGO</button>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="cajeroModal">
         <div class="modal-card">
-            <h2 class="modal-title">CARGAR SALDO</h2>
-            <div id="loaderCajero">⏳ Buscando cajero activo...</div>
-            <div id="infoCBU" class="hidden">
-                <div class="credential-box"><span id="titularCBU">...</span></div>
-                <div class="credential-box" onclick="copiarDato('numCBU')"><span id="numCBU">...</span> 📋</div>
+            <h2 style="margin:0 0 15px 0;">DATOS DE CARGA</h2>
+            <div id="loader">⏳ Obteniendo CBU seguro...</div>
+            <div id="datosCBU" class="hidden">
+                <div style="font-size:12px; color:#aaa; margin-bottom:5px;">Titular:</div>
+                <div class="credential-box"><span id="titular"></span></div>
+                <div style="font-size:12px; color:#aaa; margin-bottom:5px;">CBU / ALIAS:</div>
+                <div class="credential-box" onclick="copiar('cbu')"><span id="cbu"></span> 📋</div>
                 <button class="btn-action" onclick="avisarPago()" style="background:#00C853; color:#fff;">YA TRANSFERÍ ✅</button>
             </div>
-            <button class="link-text" onclick="cerrarCajero()" style="background:none; border:none;">VOLVER</button>
+            <div onclick="cerrarTodo()" style="margin-top:20px; color:#888; cursor:pointer;">CERRAR</div>
         </div>
     </div>
 
     <script>
-        const VPS_URL = 'http://66.94.96.165:3000'; // TU NUEVO VPS
+        // LA URL AHORA ES SEGURA GRACIAS A CLOUDFLARE
+        const API_URL = 'https://api.juga300.win';
 
-        window.onload = function() {
+        window.onload = () => {
             const user = localStorage.getItem('miUsuario');
-            const pass = localStorage.getItem('miPass');
-            if (user && pass) {
+            if (user) {
                 document.getElementById('wbUser').innerText = user;
-                document.getElementById('wbPass').innerText = pass;
+                document.getElementById('wbPass').innerText = localStorage.getItem('miPass');
                 document.getElementById('welcomeBackModal').classList.remove('hidden');
             } else {
                 document.getElementById('registerModal').classList.remove('hidden');
             }
         };
 
-        function goFullScreen() {
-            let el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen();
-        }
-
         async function procesarRegistro(e) {
             e.preventDefault();
-            goFullScreen();
             const btn = e.target.querySelector('button');
             btn.innerText = "PROCESANDO...";
-
+            
             const datos = {
-                nombre: document.getElementById('regNombre').value,
-                apellido: document.getElementById('regApellido').value,
-                email: document.getElementById('regEmail').value,
-                telefono: document.getElementById('regTelefono').value,
                 username: document.getElementById('regUser').value,
-                password: document.getElementById('regPass').value
+                password: document.getElementById('regPass').value,
+                telefono: document.getElementById('regTel').value
             };
 
             try {
-                const res = await fetch(`${VPS_URL}/crear-usuario`, {
+                await fetch(`${API_URL}/crear-usuario`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datos)
                 });
-                
                 localStorage.setItem('miUsuario', datos.username);
                 localStorage.setItem('miPass', datos.password);
                 location.reload();
             } catch (err) {
-                alert('Error al conectar con el servidor.');
-                btn.innerText = "CREAR CUENTA";
+                alert("Error de conexión segura. Reintente.");
+                btn.innerText = "REGISTRARME AHORA";
             }
         }
 
         async function abrirCajero() {
             document.getElementById('cajeroModal').classList.remove('hidden');
             try {
-                const res = await fetch(`${VPS_URL}/obtener-cbu`);
+                const res = await fetch(`${API_URL}/obtener-cbu`);
                 const data = await res.json();
-                document.getElementById('loaderCajero').classList.add('hidden');
-                document.getElementById('infoCBU').classList.remove('hidden');
-                document.getElementById('titularCBU').innerText = data.titular;
-                document.getElementById('numCBU').innerText = data.cbu;
-            } catch (e) {
-                alert('No hay cajeros disponibles.');
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('datosCBU').classList.remove('hidden');
+                document.getElementById('titular').innerText = data.titular;
+                document.getElementById('cbu').innerText = data.cbu;
+            } catch (err) {
+                alert("Cajero fuera de línea temporalmente.");
             }
         }
 
-        function copiarDato(id) {
+        function copiar(id) {
             navigator.clipboard.writeText(document.getElementById(id).innerText);
-            alert('Copiado!');
+            alert("Copiado al portapapeles");
         }
-
-        function copiarPassYEntrar() {
-            copiarDato('wbPass');
-            alert('Contraseña copiada. Pégala en el casino.');
-            cerrarTodo();
-        }
-
-        function avisarPago() { alert('Aviso enviado! Tu saldo se cargará pronto.'); cerrarCajero(); }
+        function avisarPago() { alert("Aviso enviado. Tu saldo se cargará en minutos."); cerrarTodo(); }
         function cerrarTodo() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden')); }
-        function cerrarCajero() { document.getElementById('cajeroModal').classList.add('hidden'); }
     </script>
 </body>
 </html>
