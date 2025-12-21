@@ -12,20 +12,20 @@
         /* Iframe al fondo */
         iframe { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; border: none; z-index: 1; }
         
-        /* BOTÓN FLOTANTE CORREGIDO (Más chico y más abajo) */
+        /* BOTÓN FLOTANTE CORREGIDO: Compacto y posición estratégica */
         .header-btn { 
             position: fixed; 
             z-index: 9999; 
-            background: #00C853; 
+            background: rgba(0, 200, 83, 0.95); /* Un poco de transparencia */
             color: #fff; 
-            padding: 8px 14px; /* Más chico */
+            padding: 6px 12px; /* Relleno reducido para que sea más fino */
             border-radius: 50px; 
             font-weight: 800; 
-            font-size: 10px; /* Letra más chica */
-            top: 85px; /* BAJADO PARA NO TAPAR EL LOGIN */
+            font-size: 10px; /* Texto pequeño */
+            top: 55px; /* Altura ideal: Debajo del Login, Arriba del Juego */
             right: 10px; 
             cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(0,200,83,0.5); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
             border: 1px solid rgba(255,255,255,0.2);
             transition: transform 0.1s;
             display: flex;
@@ -187,6 +187,8 @@
     </div>
 
     <script>
+        // Recuerda: Si estás usando Localtunnel, cambia esto por tu link.
+        // Si no, déjalo como https://api.juga300.win
         const API_URL = 'https://api.juga300.win';
 
         window.onload = () => {
