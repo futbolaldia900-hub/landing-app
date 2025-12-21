@@ -12,22 +12,25 @@
         /* Iframe al fondo */
         iframe { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; border: none; z-index: 1; }
         
-        /* Botón Flotante Principal - Z-Index muy alto para estar sobre todo */
+        /* BOTÓN FLOTANTE CORREGIDO (Más chico y más abajo) */
         .header-btn { 
             position: fixed; 
             z-index: 9999; 
             background: #00C853; 
             color: #fff; 
-            padding: 12px 20px; 
+            padding: 8px 14px; /* Más chico */
             border-radius: 50px; 
             font-weight: 800; 
-            font-size: 12px; 
-            top: 20px; 
-            right: 20px; 
+            font-size: 10px; /* Letra más chica */
+            top: 85px; /* BAJADO PARA NO TAPAR EL LOGIN */
+            right: 10px; 
             cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(0,200,83,0.6); 
-            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 10px rgba(0,200,83,0.5); 
+            border: 1px solid rgba(255,255,255,0.2);
             transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         .header-btn:active { transform: scale(0.95); }
         
@@ -40,7 +43,7 @@
             height: 100%; 
             background: rgba(0,0,0,0.85); 
             backdrop-filter: blur(8px); 
-            z-index: 10000; /* Mayor que el botón */
+            z-index: 10000; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
@@ -90,7 +93,10 @@
 </head>
 <body>
     <iframe src="https://bet300.biz"></iframe>
-    <div class="header-btn" onclick="abrirCajero()">💸 DEPOSITAR / RETIRAR</div>
+    
+    <div class="header-btn" onclick="abrirCajero()">
+        <span>💸</span> DEPOSITAR / RETIRAR
+    </div>
 
     <div class="modal-overlay hidden" id="welcomeBackModal">
         <div class="modal-card">
